@@ -73,7 +73,14 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
 
       {/* Footer / User Profile */}
       <div className="p-4 border-t border-slate-800/50 space-y-1 mt-auto">
-        <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-slate-900 text-slate-400 hover:text-slate-200 transition-colors">
+        <button 
+          onClick={() => onChangeView('settings')}
+          className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors ${
+            currentView === 'settings' 
+              ? 'bg-indigo-500/10 text-indigo-400' 
+              : 'hover:bg-slate-900 text-slate-400 hover:text-slate-200'
+          }`}
+        >
             <Settings size={18} />
             <span className="text-sm font-medium">Settings</span>
         </button>

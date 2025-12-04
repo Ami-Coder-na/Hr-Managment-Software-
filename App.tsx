@@ -34,7 +34,12 @@ import {
   Upload,
   GraduationCap,
   ListChecks,
-  Circle
+  Circle,
+  Settings as SettingsIcon,
+  LogOut,
+  Menu,
+  Network,
+  LayoutDashboard
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -479,6 +484,7 @@ const EmployeeList = ({
                     <table className="w-full text-left border-collapse">
                         <thead>
                             <tr className="bg-slate-50/50 border-b border-slate-100">
+                                <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">ID</th>
                                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Employee</th>
                                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Role</th>
                                 <th className="px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Department</th>
@@ -493,6 +499,9 @@ const EmployeeList = ({
                                     onClick={() => handleRowClick(emp)}
                                     className="group hover:bg-white hover:shadow-lg hover:shadow-slate-200/50 hover:z-10 relative transition-all duration-200 ease-in-out cursor-pointer"
                                 >
+                                    <td className="px-6 py-4">
+                                        <span className="font-mono text-xs text-slate-500">#{emp.id}</span>
+                                    </td>
                                     <td className="px-6 py-4">
                                         <div className="flex items-center gap-4">
                                             <div className="relative">
@@ -1410,8 +1419,13 @@ const TaskManagementView = ({ employees, tasks, setTasks }: {
     };
 
     const TaskColumn = ({ title, status, items }: { title: string, status: TaskStatus, items: Task[] }) => (
-        <div className="flex-1 min-w-[300px] bg-slate-50 rounded-xl p-4 border border-slate-200 h-full flex flex-col">
-            <div className="flex items-center justify-between mb-4">
+        <div className="flex-1 min-w-[300px] bg-slate-50 rounded-xl p-4 border border-slate-200 h-full flex flex-col relative overflow-hidden">
+            {status === 'Done' && (
+                <div className="absolute -right-12 -bottom-12 opacity-5 pointer-events-none">
+                     <CheckCircle2 size={200} className="text-emerald-500" />
+                </div>
+            )}
+            <div className="flex items-center justify-between mb-4 relative z-10">
                 <h3 className="font-bold text-slate-700 flex items-center gap-2">
                     {status === 'To Do' && <div className="w-3 h-3 rounded-full bg-slate-400" />}
                     {status === 'In Progress' && <div className="w-3 h-3 rounded-full bg-indigo-500 animate-pulse" />}
@@ -1420,11 +1434,16 @@ const TaskManagementView = ({ employees, tasks, setTasks }: {
                     <span className="ml-2 bg-white text-slate-500 px-2 py-0.5 rounded-full text-xs border border-slate-200 shadow-sm">{items.length}</span>
                 </h3>
             </div>
-            <div className="space-y-3 overflow-y-auto pr-1 flex-1">
+            <div className="space-y-3 overflow-y-auto pr-1 flex-1 relative z-10">
                 {items.map(task => {
                     const assignee = employees.find(e => e.id === task.assigneeId);
                     return (
-                        <div key={task.id} className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group">
+                        <div 
+                            key={task.id} 
+                            className={`bg-white p-4 rounded-xl border shadow-sm hover:shadow-md transition-all group animate-in fade-in slide-in-from-bottom-2 duration-300
+                                ${status === 'Done' ? 'border-emerald-100 bg-emerald-50/30' : 'border-slate-200'}
+                            `}
+                        >
                             <div className="flex justify-between items-start mb-2">
                                 <span className={`text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wide border ${getPriorityColor(task.priority)}`}>
                                     {task.priority}
@@ -1435,7 +1454,7 @@ const TaskManagementView = ({ employees, tasks, setTasks }: {
                                     </button>
                                 </div>
                             </div>
-                            <h4 className="font-bold text-slate-800 mb-1">{task.title}</h4>
+                            <h4 className={`font-bold mb-1 ${status === 'Done' ? 'text-slate-500 line-through' : 'text-slate-800'}`}>{task.title}</h4>
                             <p className="text-xs text-slate-500 line-clamp-2 mb-3 leading-relaxed">{task.description}</p>
                             
                             <div className="flex items-center justify-between pt-3 border-t border-slate-100">
@@ -1451,7 +1470,7 @@ const TaskManagementView = ({ employees, tasks, setTasks }: {
                                 <select 
                                     value={task.status} 
                                     onChange={(e) => handleStatusChange(task.id, e.target.value as TaskStatus)}
-                                    className="text-xs font-medium text-slate-500 bg-slate-50 border border-slate-200 rounded px-1 py-0.5 outline-none focus:border-indigo-500"
+                                    className="text-xs font-medium text-slate-500 bg-slate-50 border border-slate-200 rounded px-1 py-0.5 outline-none focus:border-indigo-500 cursor-pointer hover:bg-slate-100 transition-colors"
                                 >
                                     <option value="To Do">To Do</option>
                                     <option value="In Progress">In Progress</option>
@@ -2136,6 +2155,105 @@ const OnboardingView = ({ employees }: { employees: Employee[] }) => {
     );
 };
 
+const SettingsView = () => {
+    return (
+        <div className="space-y-6">
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="border-b border-slate-100">
+                     <nav className="flex space-x-8 px-6" aria-label="Tabs">
+                         <button className="border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                             General Settings
+                         </button>
+                         <button className="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                             Notifications
+                         </button>
+                         <button className="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                             Security
+                         </button>
+                         <button className="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+                             Data Management
+                         </button>
+                     </nav>
+                </div>
+                
+                <div className="p-8 space-y-8">
+                    {/* Company Profile Section */}
+                    <div>
+                        <h3 className="text-lg font-bold text-slate-900 mb-1">Company Profile</h3>
+                        <p className="text-sm text-slate-500 mb-6">Manage your company's public information.</p>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">Company Name</label>
+                                    <input type="text" defaultValue="Nexus Innovations Inc." className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">Support Email</label>
+                                    <input type="email" defaultValue="support@nexus.inc" className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
+                                    <select className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                        <option>Pacific Time (US & Canada)</option>
+                                        <option>Eastern Time (US & Canada)</option>
+                                        <option>UTC</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-2">Company Logo</label>
+                                <div className="flex items-center gap-6">
+                                    <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-indigo-500/20">
+                                        N
+                                    </div>
+                                    <div className="space-y-2">
+                                        <button className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
+                                            Change Logo
+                                        </button>
+                                        <p className="text-xs text-slate-500">JPG, GIF or PNG. Max size of 800K</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="border-t border-slate-100 pt-8">
+                         <h3 className="text-lg font-bold text-slate-900 mb-1">Regional Settings</h3>
+                         <p className="text-sm text-slate-500 mb-6">Set your preferred language and date formats.</p>
+                         
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Language</label>
+                                <select className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                    <option>English (United States)</option>
+                                    <option>Spanish</option>
+                                    <option>French</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Date Format</label>
+                                <select className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                                    <option>MM/DD/YYYY</option>
+                                    <option>DD/MM/YYYY</option>
+                                    <option>YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                         </div>
+                    </div>
+
+                    <div className="flex justify-end pt-4">
+                        <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 // --- Main App Component ---
 
 const App: React.FC = () => {
@@ -2156,7 +2274,8 @@ const App: React.FC = () => {
       tasks: 'Task Management',
       attendance: 'Attendance & Leave',
       payroll: 'Payroll Management',
-      onboarding: 'Onboarding Checklist'
+      onboarding: 'Onboarding Checklist',
+      settings: 'System Settings'
   };
 
   return (
@@ -2196,6 +2315,7 @@ const App: React.FC = () => {
             {currentView === 'attendance' && <AttendanceView employees={employees} attendance={attendance} leaves={leaves} setLeaves={setLeaves} />}
             {currentView === 'payroll' && <PayrollView employees={employees} payroll={payroll} setPayroll={setPayroll} />}
             {currentView === 'onboarding' && <OnboardingView employees={employees} />}
+            {currentView === 'settings' && <SettingsView />}
             {currentView === 'orgchart' && (
                 <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 h-[700px] overflow-hidden">
                     <OrgChart employees={employees} />

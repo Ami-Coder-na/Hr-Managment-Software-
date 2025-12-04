@@ -127,4 +127,4 @@ export enum Department {
     icon: React.ComponentType<any>;
   }
 
-  export type ViewState = 'dashboard' | 'employees' | 'recruitment' | 'performance' | 'orgchart' | 'tasks' | 'attendance' | 'payroll' | 'onboarding';
+  export type ViewState = 'dashboard' | 'employees' | 'recruitment' | 'performance' | 'orgchart' | 'tasks' | 'attendance' | 'payroll' | 'onboarding' | 'settings';
