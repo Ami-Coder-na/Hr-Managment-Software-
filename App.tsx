@@ -39,7 +39,16 @@ import {
   LogOut,
   Menu,
   Network,
-  LayoutDashboard
+  LayoutDashboard,
+  Shield,
+  Bell,
+  Database,
+  Globe,
+  Building,
+  Save,
+  Lock,
+  RefreshCw,
+  ArrowRight
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -62,6 +71,138 @@ import { Employee, ViewState, JobPosting, Department, EmployeeStatus, Task, Task
 import * as GeminiService from './services/geminiService';
 
 // --- Sub-components ---
+
+const LoginView = ({ onLogin }: { onLogin: (e: React.FormEvent) => void }) => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
+        // Simulate network request
+        setTimeout(() => {
+            setIsLoading(false);
+            onLogin(e);
+        }, 1000);
+    };
+
+    const handleDemoLogin = (role: 'admin' | 'hr') => {
+        if (role === 'admin') {
+            setEmail('admin@nexus.com');
+            setPassword('admin123');
+        } else {
+            setEmail('hr.manager@nexus.com');
+            setPassword('hr123');
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4 relative overflow-hidden">
+            {/* Background Decorations */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-500/10 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-100 p-8 relative z-10 animate-in fade-in zoom-in-95 duration-500">
+                <div className="text-center mb-8">
+                    <div className="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-indigo-500/30 mx-auto mb-4">
+                        N
+                    </div>
+                    <h1 className="text-2xl font-bold text-slate-900">Welcome Back</h1>
+                    <p className="text-slate-500 text-sm mt-2">Sign in to access your dashboard</p>
+                </div>
+
+                {/* Demo Buttons */}
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                    <button 
+                        type="button"
+                        onClick={() => handleDemoLogin('admin')}
+                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-indigo-50 hover:border-indigo-200 transition-all group"
+                    >
+                        <span className="text-xs font-bold text-slate-600 group-hover:text-indigo-700 uppercase tracking-wider mb-1">Admin Demo</span>
+                        <span className="text-[10px] text-slate-400 group-hover:text-indigo-500">admin@nexus.com</span>
+                    </button>
+                    <button 
+                        type="button"
+                        onClick={() => handleDemoLogin('hr')}
+                        className="flex flex-col items-center justify-center p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-purple-50 hover:border-purple-200 transition-all group"
+                    >
+                        <span className="text-xs font-bold text-slate-600 group-hover:text-purple-700 uppercase tracking-wider mb-1">HR Demo</span>
+                        <span className="text-[10px] text-slate-400 group-hover:text-purple-500">hr@nexus.com</span>
+                    </button>
+                </div>
+
+                <div className="relative mb-6">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-slate-200"></div>
+                    </div>
+                    <div className="relative flex justify-center text-xs uppercase">
+                        <span className="bg-white px-2 text-slate-400 font-medium">Or sign in with email</span>
+                    </div>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Email Address</label>
+                        <div className="relative">
+                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <input 
+                                type="email" 
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                                placeholder="name@company.com"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                            <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Password</label>
+                            <a href="#" className="text-xs font-medium text-indigo-600 hover:text-indigo-700">Forgot password?</a>
+                        </div>
+                        <div className="relative">
+                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                            <input 
+                                type="password" 
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-900 focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all"
+                                placeholder="••••••••"
+                            />
+                        </div>
+                    </div>
+
+                    <button 
+                        type="submit" 
+                        disabled={isLoading}
+                        className="w-full bg-indigo-600 text-white py-3.5 rounded-xl font-bold hover:bg-indigo-700 hover:shadow-lg hover:shadow-indigo-500/25 transition-all flex items-center justify-center gap-2"
+                    >
+                        {isLoading ? (
+                            <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                        ) : (
+                            <>
+                                Sign In <ArrowRight size={18} />
+                            </>
+                        )}
+                    </button>
+                </form>
+
+                <div className="mt-8 text-center">
+                    <p className="text-sm text-slate-400">
+                        Don't have an account? <a href="#" className="text-indigo-600 font-medium hover:underline">Contact Admin</a>
+                    </p>
+                </div>
+            </div>
+
+            <p className="mt-8 text-xs text-slate-400">© 2023 Nexus Innovations Inc. All rights reserved.</p>
+        </div>
+    );
+};
 
 const StatCard = ({ title, value, subtext, icon: Icon, colorClass, trend }: any) => (
     <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow group">
@@ -90,6 +231,23 @@ const DashboardStats = ({ employees, jobs }: { employees: Employee[], jobs: JobP
         { name: 'Sales', count: employees.filter(e => e.department === Department.SALES).length },
         { name: 'HR', count: employees.filter(e => e.department === Department.HR).length },
         { name: 'Mkt', count: employees.filter(e => e.department === Department.MARKETING).length },
+    ];
+
+    const hiringData = [
+        { name: 'Jan', applicants: 65, hires: 4 },
+        { name: 'Feb', applicants: 59, hires: 3 },
+        { name: 'Mar', applicants: 80, hires: 6 },
+        { name: 'Apr', applicants: 81, hires: 5 },
+        { name: 'May', applicants: 56, hires: 3 },
+        { name: 'Jun', applicants: 95, hires: 7 },
+        { name: 'Jul', applicants: 70, hires: 4 },
+    ];
+
+    const performanceData = [
+        { name: 'Outstanding', count: 12, fill: '#6366f1' },
+        { name: 'Exceeds', count: 28, fill: '#8b5cf6' },
+        { name: 'Meets', count: 45, fill: '#ec4899' },
+        { name: 'Needs Imp.', count: 10, fill: '#f43f5e' },
     ];
 
     return (
@@ -188,6 +346,56 @@ const DashboardStats = ({ employees, jobs }: { employees: Employee[], jobs: JobP
                              <div className="w-3 h-3 rounded-full bg-pink-500"></div> Female
                          </div>
                      </div>
+                </div>
+            </div>
+
+            {/* Additional Charts Row */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div className="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h4 className="text-lg font-bold text-slate-800 mb-2">Recruitment Velocity</h4>
+                    <p className="text-sm text-slate-500 mb-6">Applications vs Hires (YTD)</p>
+                    <div className="h-72">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <AreaChart data={hiringData}>
+                                <defs>
+                                    <linearGradient id="colorApplicants" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                                    </linearGradient>
+                                    <linearGradient id="colorHires" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                                    </linearGradient>
+                                </defs>
+                                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} dy={10} />
+                                <YAxis axisLine={false} tickLine={false} tick={{fill: '#94a3b8', fontSize: 12}} />
+                                <Tooltip contentStyle={{borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}} />
+                                <Area type="monotone" dataKey="applicants" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorApplicants)" />
+                                <Area type="monotone" dataKey="hires" stroke="#10b981" strokeWidth={3} fillOpacity={1} fill="url(#colorHires)" />
+                            </AreaChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
+                    <h4 className="text-lg font-bold text-slate-800 mb-2">Performance Distribution</h4>
+                    <p className="text-sm text-slate-500 mb-6">Last Review Cycle</p>
+                    <div className="h-72">
+                        <ResponsiveContainer width="100%" height="100%">
+                            <BarChart data={performanceData} layout="vertical" margin={{top: 0, right: 30, left: 10, bottom: 0}}>
+                                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#f1f5f9" />
+                                <XAxis type="number" hide />
+                                <YAxis dataKey="name" type="category" width={80} axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 11}} />
+                                <Tooltip cursor={{fill: 'transparent'}} contentStyle={{borderRadius: '8px'}} />
+                                <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={32}>
+                                    {performanceData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={entry.fill} />
+                                    ))}
+                                </Bar>
+                            </BarChart>
+                        </ResponsiveContainer>
+                    </div>
                 </div>
             </div>
         </div>
@@ -806,6 +1014,33 @@ const EmployeeList = ({
                                         {selectedEmployee.id}
                                     </p>
                                 </div>
+
+                                {/* Manager Info */}
+                                <div className="space-y-1">
+                                     <label className="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                                        <User size={12} /> Manager
+                                    </label>
+                                    <div className="text-sm font-medium text-slate-700 bg-slate-50 px-3 py-2 rounded-lg border border-slate-100 flex items-center gap-2">
+                                        {selectedEmployee.managerId ? (
+                                            <>
+                                                {(() => {
+                                                    const manager = employees.find(e => e.id === selectedEmployee.managerId);
+                                                    return manager ? (
+                                                        <>
+                                                            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] text-indigo-700 font-bold">
+                                                                {manager.firstName[0]}{manager.lastName[0]}
+                                                            </div>
+                                                            <span>{manager.firstName} {manager.lastName}</span>
+                                                            <span className="text-xs text-slate-400 ml-auto">#{manager.id}</span>
+                                                        </>
+                                                    ) : <span>Unknown (ID: {selectedEmployee.managerId})</span>
+                                                })()}
+                                            </>
+                                        ) : (
+                                            <span className="text-slate-400 italic">No Manager Assigned</span>
+                                        )}
+                                    </div>
+                                </div>
                              </div>
 
                              {/* Assigned Tasks Section */}
@@ -827,7 +1062,7 @@ const EmployeeList = ({
                                                               task.priority === 'Medium' ? 'bg-amber-50 text-amber-600 border-amber-100' :
                                                               'bg-blue-50 text-blue-600 border-blue-100'}
                                                          `}>{task.priority}</span>
-                                                         <span className="text-[10px] font-medium text-slate-500 bg-white border border-slate-100 px-1.5 py-0.5 rounded">Due: {task.dueDate}</span>
+                                                         <span className="text-xs font-medium text-slate-500 bg-white border border-slate-100 px-1.5 py-0.5 rounded">Due: {task.dueDate}</span>
                                                     </div>
                                                 </div>
                                                 <span className={`text-[10px] font-bold px-2 py-1 rounded-full
@@ -864,6 +1099,7 @@ const EmployeeList = ({
     );
 };
 
+// ... [The rest of the sub-components: AttendanceView, PayrollView, TaskManagementView, RecruitmentView, PerformanceView, OnboardingView, SettingsView remain unchanged] ...
 const AttendanceView = ({ 
     employees, 
     attendance, 
@@ -875,6 +1111,7 @@ const AttendanceView = ({
     leaves: LeaveRequest[],
     setLeaves: React.Dispatch<React.SetStateAction<LeaveRequest[]>>
 }) => {
+    // ... [Content of AttendanceView same as previous] ...
     const [activeTab, setActiveTab] = useState<'daily' | 'leaves'>('daily');
 
     const getStatusColor = (status: string) => {
@@ -1034,11 +1271,11 @@ const PayrollView = ({
     payroll: PayrollRecord[], 
     setPayroll: React.Dispatch<React.SetStateAction<PayrollRecord[]>> 
 }) => {
+    // ... [PayrollView Content same as previous] ...
     const [selectedPayslip, setSelectedPayslip] = useState<PayrollRecord | null>(null);
     const [selectedMonth, setSelectedMonth] = useState('October');
     const [selectedYear, setSelectedYear] = useState(2023);
     
-    // Payment Processing State
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
     const [processingRecordId, setProcessingRecordId] = useState<string | null>(null);
     const [paymentMethod, setPaymentMethod] = useState<'Bank Transfer' | 'Check' | 'Cash'>('Bank Transfer');
@@ -1047,7 +1284,6 @@ const PayrollView = ({
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     const years = [2023, 2024];
 
-    // Filter Logic
     const filteredPayroll = payroll.filter(p => p.month === selectedMonth && p.year === selectedYear);
 
     const totalPayroll = filteredPayroll.reduce((acc, curr) => acc + curr.netSalary, 0);
@@ -1082,7 +1318,6 @@ const PayrollView = ({
 
     return (
         <div className="space-y-6">
-            {/* Filter Bar */}
             <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-wrap items-center gap-4 justify-between">
                 <div className="flex items-center gap-4">
                      <div className="flex items-center gap-2">
@@ -1117,7 +1352,6 @@ const PayrollView = ({
                 </button>
             </div>
 
-            {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100">
                     <div className="flex items-center gap-4 mb-2">
@@ -1150,7 +1384,6 @@ const PayrollView = ({
                 </div>
             </div>
 
-            {/* Table */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden min-h-[400px]">
                 <div className="px-6 py-5 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
                     <h3 className="text-lg font-bold text-slate-800">Payroll Records - {selectedMonth} {selectedYear}</h3>
@@ -1236,7 +1469,6 @@ const PayrollView = ({
                 )}
             </div>
 
-            {/* Payment Processing Modal */}
             {paymentModalOpen && (
                 <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 animate-in zoom-in-95 border border-slate-200">
@@ -1287,7 +1519,6 @@ const PayrollView = ({
                 </div>
             )}
 
-            {/* Payslip Modal */}
             {selectedPayslip && (
                 <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 animate-in zoom-in-95 border border-slate-200">
@@ -1372,6 +1603,7 @@ const TaskManagementView = ({ employees, tasks, setTasks }: {
     tasks: Task[], 
     setTasks: React.Dispatch<React.SetStateAction<Task[]>> 
 }) => {
+    // ... [TaskManagementView content omitted for brevity, unchanged] ...
     const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
     const [newTask, setNewTask] = useState<Partial<Task>>({
         title: '',
@@ -1592,6 +1824,7 @@ const TaskManagementView = ({ employees, tasks, setTasks }: {
 };
 
 const RecruitmentView = ({ jobs, setJobs }: { jobs: JobPosting[], setJobs: React.Dispatch<React.SetStateAction<JobPosting[]>> }) => {
+    // ... [RecruitmentView Content omitted, same as original] ...
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newJob, setNewJob] = useState({ title: '', department: 'Engineering', keywords: '' });
     const [generatedJD, setGeneratedJD] = useState<{ description: string, requirements: string[] } | null>(null);
@@ -1885,6 +2118,7 @@ const RecruitmentView = ({ jobs, setJobs }: { jobs: JobPosting[], setJobs: React
 };
 
 const PerformanceView = ({ employees }: { employees: Employee[] }) => {
+    // ... [PerformanceView Content omitted, unchanged] ...
     const [selectedEmployee, setSelectedEmployee] = useState<string>(employees[0].id);
     const [notes, setNotes] = useState('');
     const [aiReview, setAiReview] = useState('');
@@ -2003,6 +2237,7 @@ const PerformanceView = ({ employees }: { employees: Employee[] }) => {
 };
 
 const OnboardingView = ({ employees }: { employees: Employee[] }) => {
+    // ... [OnboardingView Content omitted, unchanged] ...
     const [onboardingRecords, setOnboardingRecords] = useState<OnboardingRecord[]>(MOCK_ONBOARDING);
     const [selectedEmployeeId, setSelectedEmployeeId] = useState<string>(MOCK_ONBOARDING[0].employeeId);
 
@@ -2155,97 +2390,405 @@ const OnboardingView = ({ employees }: { employees: Employee[] }) => {
     );
 };
 
-const SettingsView = () => {
+const SettingsView = ({ fullData }: { fullData: any }) => {
+    const [activeTab, setActiveTab] = useState('general');
+    const [isSaving, setIsSaving] = useState(false);
+    const [showToast, setShowToast] = useState(false);
+    const logoInputRef = useRef<HTMLInputElement>(null);
+
+    // Form States
+    const [general, setGeneral] = useState({
+        companyName: 'Nexus Innovations Inc.',
+        email: 'support@nexus.inc',
+        timezone: 'Pacific Time (US & Canada)',
+        language: 'English (United States)',
+        dateFormat: 'MM/DD/YYYY',
+        logo: null as string | null
+    });
+
+    const [notifications, setNotifications] = useState({
+        emailAlerts: true,
+        slackIntegration: false,
+        weeklyDigest: true,
+        newHireAlert: true
+    });
+
+    const [security, setSecurity] = useState({
+        twoFactor: false,
+        passwordExpiry: '90',
+        sessionTimeout: '30'
+    });
+
+    const showSuccessToast = () => {
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+    };
+
+    const handleSave = () => {
+        setIsSaving(true);
+        setTimeout(() => {
+            setIsSaving(false);
+            showSuccessToast();
+        }, 1200);
+    };
+
+    const handleLogoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                setGeneral({ ...general, logo: ev.target?.result as string });
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+    const handleExportData = () => {
+        const dataStr = JSON.stringify(fullData, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `nexus_hrms_export_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
+    const tabs = [
+        { id: 'general', label: 'General', icon: Globe },
+        { id: 'notifications', label: 'Notifications', icon: Bell },
+        { id: 'security', label: 'Security', icon: Shield },
+        { id: 'data', label: 'Data Management', icon: Database },
+    ];
+
+    const notificationItems = [
+        { key: 'emailAlerts', label: 'Email Alerts', desc: 'Receive daily summaries and urgent updates via email.' },
+        { key: 'slackIntegration', label: 'Slack Integration', desc: 'Push notifications to your company Slack workspace.' },
+        { key: 'newHireAlert', label: 'New Hire Alerts', desc: 'Get notified when a new employee completes onboarding.' },
+        { key: 'weeklyDigest', label: 'Weekly Digest', desc: 'A weekly summary of team performance and stats.' },
+    ];
+
     return (
-        <div className="space-y-6">
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-                <div className="border-b border-slate-100">
-                     <nav className="flex space-x-8 px-6" aria-label="Tabs">
-                         <button className="border-indigo-500 text-indigo-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                             General Settings
-                         </button>
-                         <button className="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                             Notifications
-                         </button>
-                         <button className="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                             Security
-                         </button>
-                         <button className="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
-                             Data Management
-                         </button>
-                     </nav>
-                </div>
-                
-                <div className="p-8 space-y-8">
-                    {/* Company Profile Section */}
+        <div className="grid grid-cols-12 gap-6 relative">
+            {/* Toast Notification */}
+            {showToast && (
+                <div className="fixed top-8 right-8 z-50 bg-slate-900 text-white px-6 py-3 rounded-xl shadow-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-4">
+                    <CheckCircle2 size={20} className="text-emerald-400" />
                     <div>
-                        <h3 className="text-lg font-bold text-slate-900 mb-1">Company Profile</h3>
-                        <p className="text-sm text-slate-500 mb-6">Manage your company's public information.</p>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-4">
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Company Name</label>
-                                    <input type="text" defaultValue="Nexus Innovations Inc." className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Support Email</label>
-                                    <input type="email" defaultValue="support@nexus.inc" className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500" />
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-medium text-slate-700 mb-1">Timezone</label>
-                                    <select className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                                        <option>Pacific Time (US & Canada)</option>
-                                        <option>Eastern Time (US & Canada)</option>
-                                        <option>UTC</option>
-                                    </select>
+                        <p className="font-bold text-sm">Settings Saved</p>
+                        <p className="text-xs text-slate-400">Your changes have been updated successfully.</p>
+                    </div>
+                </div>
+            )}
+
+            {/* Sidebar Navigation */}
+            <div className="col-span-12 md:col-span-3">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden sticky top-6">
+                    <div className="p-4 border-b border-slate-100 bg-slate-50/50">
+                        <h3 className="font-bold text-slate-800">System Settings</h3>
+                    </div>
+                    <nav className="p-2 space-y-1">
+                        {tabs.map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all
+                                    ${activeTab === tab.id 
+                                        ? 'bg-indigo-50 text-indigo-700 shadow-sm' 
+                                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}
+                                `}
+                            >
+                                <tab.icon size={18} className={activeTab === tab.id ? 'text-indigo-600' : 'text-slate-400'} />
+                                {tab.label}
+                            </button>
+                        ))}
+                    </nav>
+                </div>
+            </div>
+
+            {/* Content Area */}
+            <div className="col-span-12 md:col-span-9 space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 min-h-[500px]">
+                    {activeTab === 'general' && (
+                        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Company Profile</h3>
+                                <p className="text-sm text-slate-500 mb-6">Manage your company's public information.</p>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                    <div className="space-y-4">
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Company Name</label>
+                                            <div className="relative">
+                                                <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                                <input 
+                                                    type="text" 
+                                                    value={general.companyName}
+                                                    onChange={e => setGeneral({...general, companyName: e.target.value})}
+                                                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all" 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Support Email</label>
+                                            <div className="relative">
+                                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                                                <input 
+                                                    type="email" 
+                                                    value={general.email}
+                                                    onChange={e => setGeneral({...general, email: e.target.value})}
+                                                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all" 
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Company Logo</label>
+                                        <div className="flex items-start gap-6">
+                                            {general.logo ? (
+                                                <img src={general.logo} className="w-24 h-24 rounded-xl object-contain border border-slate-200 bg-slate-50" />
+                                            ) : (
+                                                <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-indigo-500/20">
+                                                    N
+                                                </div>
+                                            )}
+                                            <div className="space-y-3">
+                                                <input 
+                                                    type="file" 
+                                                    ref={logoInputRef} 
+                                                    onChange={handleLogoUpload} 
+                                                    className="hidden" 
+                                                    accept="image/*"
+                                                />
+                                                <button 
+                                                    onClick={() => logoInputRef.current?.click()}
+                                                    className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2"
+                                                >
+                                                    <Upload size={14} /> Change Logo
+                                                </button>
+                                                <p className="text-xs text-slate-500 leading-relaxed">
+                                                    Upload your company logo.<br/>Recommended size: 200x200px.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-2">Company Logo</label>
-                                <div className="flex items-center gap-6">
-                                    <div className="w-24 h-24 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-lg shadow-indigo-500/20">
-                                        N
+                            <div className="border-t border-slate-100 pt-8">
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Regional Settings</h3>
+                                <p className="text-sm text-slate-500 mb-6">Set your preferred language and date formats.</p>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Language</label>
+                                        <div className="relative">
+                                            <select 
+                                                value={general.language}
+                                                onChange={e => setGeneral({...general, language: e.target.value})}
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none appearance-none cursor-pointer"
+                                            >
+                                                <option>English (United States)</option>
+                                                <option>Spanish</option>
+                                                <option>French</option>
+                                            </select>
+                                            <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                                        </div>
                                     </div>
-                                    <div className="space-y-2">
-                                        <button className="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
-                                            Change Logo
-                                        </button>
-                                        <p className="text-xs text-slate-500">JPG, GIF or PNG. Max size of 800K</p>
+                                    <div>
+                                        <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Date Format</label>
+                                        <div className="relative">
+                                            <select 
+                                                value={general.dateFormat}
+                                                onChange={e => setGeneral({...general, dateFormat: e.target.value})}
+                                                className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none appearance-none cursor-pointer"
+                                            >
+                                                <option>MM/DD/YYYY</option>
+                                                <option>DD/MM/YYYY</option>
+                                                <option>YYYY-MM-DD</option>
+                                            </select>
+                                            <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div className="border-t border-slate-100 pt-8">
-                         <h3 className="text-lg font-bold text-slate-900 mb-1">Regional Settings</h3>
-                         <p className="text-sm text-slate-500 mb-6">Set your preferred language and date formats.</p>
-                         
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Language</label>
-                                <select className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                                    <option>English (United States)</option>
-                                    <option>Spanish</option>
-                                    <option>French</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1">Date Format</label>
-                                <select className="w-full rounded-lg border-slate-300 border px-3 py-2 text-sm focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                                    <option>MM/DD/YYYY</option>
-                                    <option>DD/MM/YYYY</option>
-                                    <option>YYYY-MM-DD</option>
-                                </select>
-                            </div>
-                         </div>
-                    </div>
+                    )}
 
-                    <div className="flex justify-end pt-4">
-                        <button className="bg-indigo-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all">
-                            Save Changes
+                    {activeTab === 'notifications' && (
+                         <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Notification Preferences</h3>
+                                <p className="text-sm text-slate-500 mb-6">Control how you receive alerts and updates.</p>
+
+                                <div className="space-y-4">
+                                    {notificationItems.map((item) => (
+                                        <div key={item.key} className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                                            <div>
+                                                <h4 className="text-sm font-bold text-slate-800">{item.label}</h4>
+                                                <p className="text-xs text-slate-500 mt-1">{item.desc}</p>
+                                            </div>
+                                            <button 
+                                                onClick={() => setNotifications({ ...notifications, [item.key]: !(notifications as any)[item.key] })}
+                                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                                                    (notifications as any)[item.key] ? 'bg-indigo-600' : 'bg-slate-300'
+                                                }`}
+                                            >
+                                                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition duration-200 ease-in-out ${
+                                                    (notifications as any)[item.key] ? 'translate-x-6' : 'translate-x-1'
+                                                }`} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'security' && (
+                        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                             <div>
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Security Settings</h3>
+                                <p className="text-sm text-slate-500 mb-6">Manage access and authentication protocols.</p>
+
+                                <div className="space-y-6">
+                                    <div className="p-5 border border-indigo-100 bg-indigo-50/50 rounded-xl flex justify-between items-center">
+                                        <div className="flex gap-4 items-center">
+                                            <div className="p-3 bg-white rounded-lg text-indigo-600 shadow-sm">
+                                                <Lock size={20} />
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-slate-800">Two-Factor Authentication</h4>
+                                                <p className="text-xs text-slate-500 mt-1">Require 2FA for all admin accounts.</p>
+                                            </div>
+                                        </div>
+                                        <button 
+                                            onClick={() => setSecurity({...security, twoFactor: !security.twoFactor})}
+                                            className={`px-4 py-2 rounded-lg text-sm font-bold transition-colors ${
+                                                security.twoFactor 
+                                                ? 'bg-emerald-100 text-emerald-700' 
+                                                : 'bg-white border border-slate-300 text-slate-600 hover:bg-slate-50'
+                                            }`}
+                                        >
+                                            {security.twoFactor ? 'Enabled' : 'Enable'}
+                                        </button>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Password Expiry</label>
+                                            <div className="relative">
+                                                <select 
+                                                    value={security.passwordExpiry}
+                                                    onChange={(e) => setSecurity({...security, passwordExpiry: e.target.value})}
+                                                    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none appearance-none cursor-pointer"
+                                                >
+                                                    <option value="30">Every 30 Days</option>
+                                                    <option value="60">Every 60 Days</option>
+                                                    <option value="90">Every 90 Days</option>
+                                                    <option value="never">Never</option>
+                                                </select>
+                                                <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Session Timeout</label>
+                                            <div className="relative">
+                                                <select 
+                                                    value={security.sessionTimeout}
+                                                    onChange={(e) => setSecurity({...security, sessionTimeout: e.target.value})}
+                                                    className="w-full px-4 py-2.5 bg-white border border-slate-300 rounded-lg text-slate-900 text-sm focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none appearance-none cursor-pointer"
+                                                >
+                                                    <option value="15">15 Minutes</option>
+                                                    <option value="30">30 Minutes</option>
+                                                    <option value="60">1 Hour</option>
+                                                </select>
+                                                <ChevronRight size={16} className="absolute right-3 top-1/2 -translate-y-1/2 rotate-90 text-slate-400 pointer-events-none" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="pt-4 border-t border-slate-100">
+                                         <h4 className="text-sm font-bold text-slate-800 mb-4">Active Sessions</h4>
+                                         <div className="bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-center justify-between">
+                                             <div className="flex items-center gap-3">
+                                                 <Globe size={18} className="text-slate-400" />
+                                                 <div>
+                                                     <p className="text-sm font-medium text-slate-700">Chrome on MacOS (Current)</p>
+                                                     <p className="text-xs text-slate-500">San Francisco, USA • 192.168.1.1</p>
+                                                 </div>
+                                             </div>
+                                             <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Active Now</span>
+                                         </div>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    )}
+
+                    {activeTab === 'data' && (
+                        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                            <div>
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Data Management</h3>
+                                <p className="text-sm text-slate-500 mb-6">Export or manage system data.</p>
+                                
+                                <div className="space-y-4">
+                                    <div className="p-6 bg-slate-50 border border-slate-200 rounded-xl flex justify-between items-center">
+                                        <div>
+                                            <h4 className="font-bold text-slate-800 text-sm">Export All System Data</h4>
+                                            <p className="text-xs text-slate-500 mt-1">Download a JSON file containing all employees, payroll, and tasks.</p>
+                                        </div>
+                                        <button 
+                                            onClick={handleExportData}
+                                            className="px-4 py-2 bg-white border border-slate-300 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-100 hover:text-indigo-600 transition-colors flex items-center gap-2"
+                                        >
+                                            <Download size={16} /> Export JSON
+                                        </button>
+                                    </div>
+
+                                    <div className="p-6 bg-red-50 border border-red-100 rounded-xl flex justify-between items-center">
+                                        <div>
+                                            <h4 className="font-bold text-red-900 text-sm">System Reset</h4>
+                                            <p className="text-xs text-red-600 mt-1">Permanently delete all data and reset to factory defaults.</p>
+                                        </div>
+                                        <button 
+                                            onClick={() => {
+                                                if(confirm("Are you SURE? This will wipe all data. This is just a demo alert.")) {
+                                                    alert("Data reset simulation complete.");
+                                                }
+                                            }}
+                                            className="px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg text-sm font-bold hover:bg-red-600 hover:text-white transition-colors"
+                                        >
+                                            Reset Data
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Footer Actions */}
+                    <div className="mt-12 pt-6 border-t border-slate-100 flex justify-end gap-3">
+                        <button className="px-6 py-2.5 text-slate-600 hover:bg-slate-50 rounded-lg font-medium transition-colors">
+                            Cancel
+                        </button>
+                        <button 
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="bg-indigo-600 text-white px-8 py-2.5 rounded-lg font-medium hover:bg-indigo-700 shadow-lg shadow-indigo-500/20 transition-all flex items-center gap-2 disabled:opacity-70"
+                        >
+                            {isSaving ? (
+                                <>
+                                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                                    Saving...
+                                </>
+                            ) : (
+                                <>
+                                    <Save size={18} /> Save Changes
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -2257,6 +2800,7 @@ const SettingsView = () => {
 // --- Main App Component ---
 
 const App: React.FC = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [currentView, setCurrentView] = useState<ViewState>('dashboard');
   const [employees, setEmployees] = useState<Employee[]>(MOCK_EMPLOYEES);
   const [jobs, setJobs] = useState<JobPosting[]>(MOCK_JOBS);
@@ -2278,9 +2822,22 @@ const App: React.FC = () => {
       settings: 'System Settings'
   };
 
+  const handleLogin = (e: React.FormEvent) => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setCurrentView('dashboard'); // Reset view on logout
+  };
+
+  if (!isAuthenticated) {
+      return <LoginView onLogin={handleLogin} />;
+  }
+
   return (
     <div className="flex min-h-screen bg-slate-50 font-sans selection:bg-indigo-100 selection:text-indigo-900">
-      <Sidebar currentView={currentView} onChangeView={setCurrentView} />
+      <Sidebar currentView={currentView} onChangeView={setCurrentView} onSignOut={handleLogout} />
       
       <main className="flex-1 p-8 overflow-y-auto h-screen scroll-smooth">
         <header className="mb-8 flex justify-between items-center bg-white/50 backdrop-blur-sm p-4 rounded-2xl border border-white/50 sticky top-4 z-10 shadow-sm">
@@ -2315,7 +2872,7 @@ const App: React.FC = () => {
             {currentView === 'attendance' && <AttendanceView employees={employees} attendance={attendance} leaves={leaves} setLeaves={setLeaves} />}
             {currentView === 'payroll' && <PayrollView employees={employees} payroll={payroll} setPayroll={setPayroll} />}
             {currentView === 'onboarding' && <OnboardingView employees={employees} />}
-            {currentView === 'settings' && <SettingsView />}
+            {currentView === 'settings' && <SettingsView fullData={{ employees, jobs, tasks, attendance, leaves, payroll }} />}
             {currentView === 'orgchart' && (
                 <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 h-[700px] overflow-hidden">
                     <OrgChart employees={employees} />

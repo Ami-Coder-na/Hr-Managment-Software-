@@ -18,9 +18,10 @@ import { ViewState } from '../types';
 interface SidebarProps {
   currentView: ViewState;
   onChangeView: (view: ViewState) => void;
+  onSignOut: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
+const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView, onSignOut }) => {
   const menuItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'employees', label: 'Employees', icon: Users },
@@ -84,7 +85,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onChangeView }) => {
             <Settings size={18} />
             <span className="text-sm font-medium">Settings</span>
         </button>
-        <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-colors">
+        <button 
+          onClick={onSignOut}
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg hover:bg-red-500/10 text-slate-400 hover:text-red-400 transition-colors"
+        >
             <LogOut size={18} />
             <span className="text-sm font-medium">Sign Out</span>
         </button>
